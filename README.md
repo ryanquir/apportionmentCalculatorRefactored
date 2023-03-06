@@ -2,7 +2,7 @@
 
 ## Authors
 
-* Author 1 - netID
+* Christopher Joseph - tbh7cm
 * Author 2 - netID
 * Author 3 - netID
 
