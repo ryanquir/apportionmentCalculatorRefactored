@@ -1,5 +1,6 @@
 package edu.virginia.cs.hw3;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class StateReader {
@@ -13,7 +14,7 @@ public abstract class StateReader {
         return stateList;
     }
 
-    public abstract void readStates();
+    public abstract void readStates() throws IOException;
 
     protected void addState(State state) {
         stateList.add(state);
