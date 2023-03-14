@@ -3,7 +3,7 @@
 ## Authors
 
 * Christopher Joseph - tbh7cm
-* Author 2 - netID
+* Pranav Ramkumar - vej8jz
 * Author 3 - netID
 
 ## Description on how to use your code
