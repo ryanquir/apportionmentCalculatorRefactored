@@ -14,7 +14,7 @@ public abstract class StateReader {
         return stateList;
     }
 
-    public abstract void readStates() throws IOException;
+    public abstract void readStates();
 
     protected void addState(State state) {
         stateList.add(state);
