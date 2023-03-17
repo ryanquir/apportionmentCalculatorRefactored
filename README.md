@@ -4,6 +4,6 @@
 
 * Christopher Joseph - tbh7cm
 * Pranav Ramkumar - vej8jz
-* Author 3 - netID
+* Ryan Quiram - zhe5qq
 
 ## Description on how to use your code
