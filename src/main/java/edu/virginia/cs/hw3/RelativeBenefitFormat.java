@@ -57,11 +57,17 @@ public class RelativeBenefitFormat extends ApportionmentFormat{
     private String getApportionmentStringForState(State state) {
         String stateName = state.getName();
         int apportionedRepresentatives = apportionment.getRepresentativesForState(state);
-        return stateName + " - " + apportionedRepresentatives + " - " + getStateRelativeBenefit(apportionedRepresentatives, state.getPopulation());
+        double relativeStateBenefit = getStateRelativeBenefit(apportionedRepresentatives, state.getPopulation());
+        String benefitSign = benefitSign(relativeStateBenefit);
+        return stateName + " - " + apportionedRepresentatives + " - " + benefitSign + relativeStateBenefit;
     }
 
     private double getStateRelativeBenefit(int apportionedRepresentatives, int statePopulation) {
         return apportionedRepresentatives - statePopulation/divisor;
+    }
+
+    private String benefitSign(double relativeStateBenefit) {
+        return relativeStateBenefit > 0? "+": "";
     }
 
 }
