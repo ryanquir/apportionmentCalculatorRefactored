@@ -23,9 +23,21 @@ public class ArgumentsHandler {
     }
 
     public Configuration getConfiguration() {
-        setDefaultConfiguration();
-        configureStateReader();
-        checkForRepresentativeCount();
+        String filename = arguments.get(FILENAME_INDEX);
+            try {
+                if (filenameExists(filename)) {
+                    setDefaultConfiguration();
+                    configureStateReader(filename); //good
+                    configureApportionmentStrategy(); //good
+                    configureApportionmentFormat(); //good
+                    checkForRepresentativeCount(); //good
+                } else {
+                    throw new FileNotFoundException();
+                }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("File not found. Please check for typos.");
+            }
+
         return config;
     }
 
@@ -36,34 +48,55 @@ public class ArgumentsHandler {
         config.setApportionmentFormat(new AlphabeticalApportionmentFormat());
     }
 
-    private void configureStateReader() {
-        String filename = arguments.get(FILENAME_INDEX);
+    private void configureStateReader(String filename) {
         setStateReaderFromFilename(filename);
     }
-
-
+    private void configureApportionmentStrategy() {
+        if (arguments.contains("--algorithm")) {
+            int index = arguments.indexOf("--algorithm");
+            setApportionmentStrategyFromArgs(arguments.get(index+1));
+        } else if (checkShortFlags("a") != -1) {
+            //if there is a valid index corresponding to a short flag, set apportionment strategy from it.
+            int index = checkShortFlags("a");
+            setApportionmentStrategyFromArgs(arguments.get(index));
+        }
+        //if no strategies are found, default value is given.
+    }
+    private void configureApportionmentFormat() {
+        if (arguments.contains("--format")) {
+            int index = arguments.indexOf("--format");
+            setApportionmentFormatFromArgs(arguments.get(index+1));
+        } else if (checkShortFlags("f") != -1) {
+            //if there is a valid index corresponding to a short flag, set apportionment format from it.
+            int index = checkShortFlags("f");
+            setApportionmentFormatFromArgs(arguments.get(index));
+        }
+        //if no formats are found, default value is given.
+    }
+    private void setStateReaderFromFilename(String filename) {
+        StateReaderFactory factory = new StateReaderFactory();
+        factory.getStateReader(filename);
+    }
+    private void setApportionmentStrategyFromArgs(String filename) {
+        ApportionmentStrategyFactory factory = new ApportionmentStrategyFactory();
+        factory.getStrategy(filename);
+    }
+    private void setApportionmentFormatFromArgs(String filename) {
+        ApportionmentFormatFactory factory = new ApportionmentFormatFactory();
+        factory.getFormat(filename);
+    }
     private void checkForRepresentativeCount() {
-        // if (arguments.contains("--reps")) {
-           //int index = arguments.indexOf("--reps");
-           //parseReps(index+1);
-        //} else {
-            //checkShortFlags("r") //will check for short flag of "r", return nothing if none.
-        //}
-
-        if (arguments.size() < 2) {
-            return;
+        if (arguments.contains("--reps")) {
+            int index = arguments.indexOf("--reps");
+            parseReps(index+1);
+        } else if (checkShortFlags("r") != -1) {
+            //if there is a valid index corresponding to a short flag, parse reps.
+            parseReps(checkShortFlags("r"));
         }
-        try {
-            int representativeCount = Integer.parseInt(arguments.get(REPRESENTATIVES_INDEX));
-            if (representativeCount <= 0) {
-                throw new IllegalArgumentException("Error: Invalid representative count : " + representativeCount + " - number must be positive");
-            }
-            config.setRepresentatives(representativeCount);
-        } catch (NumberFormatException ignored) {
-        }
+        //if no reps are found, default value is given.
     }
 
-    private void checkShortFlags(String flag) {
+    private int checkShortFlags(String flag) {
         for (int i=1;i<arguments.size();i++) {
             //if there is an argument that has only ONE "-", and it has the flag in it...
             if (arguments.get(i).contains(flag) && arguments.get(i).contains("-") && !arguments.get(i).contains("--")) {
@@ -72,9 +105,10 @@ public class ArgumentsHandler {
                 //And adding it to original argument index to parse
                 int stringIndex = arguments.get(i).indexOf(flag);
                 parseReps(index+stringIndex);
-                break;
+                return (index+stringIndex);
             }
         }
+        return -1;
     }
 
     private void parseReps (int index) {
@@ -88,27 +122,10 @@ public class ArgumentsHandler {
         }
     }
 
-    private void setStateReaderFromFilename(String filename) {
-        if (filename.toLowerCase().endsWith(".csv")) {
-            setConfigurationToCSVReader(filename);
-        } else if (filename.toLowerCase().endsWith(".xlsx")) {
-            setConfigurationToXLSXReader(filename);
-        } else {
-            throw new IllegalArgumentException("Error: invalid file type. The system currently supports:\n" +
-                    "\t.csv, .xlsx");
-        }
-    }
 
     private boolean filenameExists(String filename) {
         File file = new File(filename);
         return file.exists();
     }
 
-    private void setConfigurationToCSVReader(String filename) {
-        config.setStateReader(new CSVStateReader(filename));
-    }
-
-    private void setConfigurationToXLSXReader(String filename) {
-        config.setStateReader(new ExcelStateReader(filename));
-    }
 }
