@@ -43,11 +43,43 @@ public class ArgumentsHandler {
 
 
     private void checkForRepresentativeCount() {
+        // if (arguments.contains("--reps")) {
+           //int index = arguments.indexOf("--reps");
+           //parseReps(index+1);
+        //} else {
+            //checkShortFlags("r") //will check for short flag of "r", return nothing if none.
+        //}
+
         if (arguments.size() < 2) {
             return;
         }
         try {
             int representativeCount = Integer.parseInt(arguments.get(REPRESENTATIVES_INDEX));
+            if (representativeCount <= 0) {
+                throw new IllegalArgumentException("Error: Invalid representative count : " + representativeCount + " - number must be positive");
+            }
+            config.setRepresentatives(representativeCount);
+        } catch (NumberFormatException ignored) {
+        }
+    }
+
+    private void checkShortFlags(String flag) {
+        for (int i=1;i<arguments.size();i++) {
+            //if there is an argument that has only ONE "-", and it has the flag in it...
+            if (arguments.get(i).contains(flag) && arguments.get(i).contains("-") && !arguments.get(i).contains("--")) {
+                int index = i;
+                //we can treat it as a combined short flag, taking the index of where the flag is in the string
+                //And adding it to original argument index to parse
+                int stringIndex = arguments.get(i).indexOf(flag);
+                parseReps(index+stringIndex);
+                break;
+            }
+        }
+    }
+
+    private void parseReps (int index) {
+        try {
+            int representativeCount = Integer.parseInt(arguments.get(index));
             if (representativeCount <= 0) {
                 throw new IllegalArgumentException("Error: Invalid representative count : " + representativeCount + " - number must be positive");
             }
