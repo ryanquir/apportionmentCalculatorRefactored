@@ -9,10 +9,15 @@ public class HuntingtonHillApportionmentStrategy extends ApportionmentStrategy {
     private Apportionment apportionment;
     private float priority;
 
+    public Apportionment getApportionment() {
+        Apportionment apportionment = new Apportionment();
+        return apportionment;
+    }
 
     @Override
     public Apportionment getApportionment(List<State> stateList, int representatives) {
         initializeFields(stateList, representatives);
+        apportionment = getApportionment();
         executeFirstPassApportionment(stateList);
         executeSecondPassApportionment(stateList);
         return apportionment;
@@ -32,7 +37,7 @@ public class HuntingtonHillApportionmentStrategy extends ApportionmentStrategy {
 
     private void executeFirstPassApportionment(List<State> stateList) {
         for (State state : stateList) {
-            apportionment.addRepresentativesToState(state, 1);
+            this.apportionment.addRepresentativesToState(state, 1);
             priorityList.put(state, getPriority(state));
         }
     }
