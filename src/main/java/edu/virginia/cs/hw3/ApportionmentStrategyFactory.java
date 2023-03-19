@@ -10,7 +10,7 @@ public class ApportionmentStrategyFactory {
             return new JeffersonApportionmentStrategy();
         } else {
             throw new IllegalArgumentException("Error: invalid algorithm type. The system currently supports:\n" +
-                    "\thamilton, huntington, jefferson");
+                    "\thamilton, huntington, jefferson\n" + "\tyour algorithm name was "+ algorithmName);
         }
     }
 }

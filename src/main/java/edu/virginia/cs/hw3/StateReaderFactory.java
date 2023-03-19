@@ -1,6 +1,7 @@
 package edu.virginia.cs.hw3;
 
 public class StateReaderFactory {
+    private Configuration config;
     StateReader getStateReader(String filename){
         if (filename.toLowerCase().endsWith(".csv")) {
             return new CSVStateReader(filename);
