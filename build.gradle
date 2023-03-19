@@ -3,15 +3,19 @@ plugins {
 }
 
 jar {
+    archivesBaseName = "Apportionment"
     manifest {
-        attributes(
-                'Main-Class': 'edu.virginia.cs.hw3.Main'
-        )
+        attributes "Main-Class": "edu.virginia.cs.hw3.Main"
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
 group 'org.example'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
