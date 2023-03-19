@@ -52,7 +52,7 @@ public class RelativeBenefitFormat extends ApportionmentFormat{
 
     private String getRelativeBenefitApportionmentString() {
         return apportionment.getStateSet().stream()
-                .sorted(Comparator.comparing((state) -> this.getStateRelativeBenefit(apportionment.getRepresentativesForState(state), state.getPopulation())))
+                .sorted(Comparator.comparing((state) -> -1*this.getStateRelativeBenefit(apportionment.getRepresentativesForState(state), state.getPopulation())))
                 .map(this::getApportionmentStringForState)
                 .collect(Collectors.joining("\n"));
     }
