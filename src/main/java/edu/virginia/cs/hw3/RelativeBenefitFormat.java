@@ -1,5 +1,6 @@
 package edu.virginia.cs.hw3;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,8 @@ public class RelativeBenefitFormat extends ApportionmentFormat{
     Apportionment apportionment;
 
     double divisor;
+
+    DecimalFormat benefitFormat = new DecimalFormat("0.000");
     @Override
     public String getApportionmentString(Apportionment apportionment) {
         setApportionment(apportionment);
@@ -59,7 +62,7 @@ public class RelativeBenefitFormat extends ApportionmentFormat{
         int apportionedRepresentatives = apportionment.getRepresentativesForState(state);
         double relativeStateBenefit = getStateRelativeBenefit(apportionedRepresentatives, state.getPopulation());
         String benefitSign = benefitSign(relativeStateBenefit);
-        return stateName + " - " + apportionedRepresentatives + " - " + benefitSign + relativeStateBenefit;
+        return stateName + " - " + apportionedRepresentatives + " - " + benefitSign + benefitFormat.format(relativeStateBenefit);
     }
 
     private double getStateRelativeBenefit(int apportionedRepresentatives, int statePopulation) {
