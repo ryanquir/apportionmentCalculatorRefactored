@@ -22,7 +22,7 @@ public class JeffersonApportionmentStrategy extends ApportionmentStrategy {
                 divisor /= ((double)(repsLeft + representatives)/representatives);
             }
             else {
-                divisor *= ((double)(repsLeft + representatives)/representatives);
+                divisor *= ((double)(-1*repsLeft + representatives)/representatives);
             }
             decimalApportionment = getDecimalApportionment();
             apportionment = getRoundedApportionment();
