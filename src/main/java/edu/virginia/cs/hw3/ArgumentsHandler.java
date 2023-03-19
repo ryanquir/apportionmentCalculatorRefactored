@@ -75,15 +75,15 @@ public class ArgumentsHandler {
     }
     private void setStateReaderFromFilename(String filename) {
         StateReaderFactory factory = new StateReaderFactory();
-        factory.getStateReader(filename);
+        config.setStateReader(factory.getStateReader(filename));
     }
     private void setApportionmentStrategyFromArgs(String filename) {
         ApportionmentStrategyFactory factory = new ApportionmentStrategyFactory();
-        factory.getStrategy(filename);
+        config.setApportionmentStrategy(factory.getStrategy(filename));
     }
     private void setApportionmentFormatFromArgs(String filename) {
         ApportionmentFormatFactory factory = new ApportionmentFormatFactory();
-        factory.getFormat(filename);
+        config.setApportionmentFormat(factory.getFormat(filename));
     }
     private void checkForRepresentativeCount() {
         if (arguments.contains("--reps")) {
