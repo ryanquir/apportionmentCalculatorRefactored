@@ -6,7 +6,7 @@ import java.io.*;
 public class ArgumentsHandler {
 
     public static final int FILENAME_INDEX = 0;
-    public static final int REPRESENTATIVES_INDEX = 1;
+//    public static final int REPRESENTATIVES_INDEX = 1;
     private final List<String> arguments;
     private Configuration config;
 
@@ -59,8 +59,10 @@ public class ArgumentsHandler {
             //if there is a valid index corresponding to a short flag, set apportionment strategy from it.
             int index = checkShortFlags("a");
             setApportionmentStrategyFromArgs(arguments.get(index));
+        } else {
+            System.out.println("No \"-a\" or \"--algorithm\" flag found. Using Default Strategy of Hamilton.");
         }
-        //if no strategies are found, default value is given.
+        //if no strategies are found, system notifies user that default value is given.
     }
     private void configureApportionmentFormat() {
         if (arguments.contains("--format")) {
@@ -70,8 +72,10 @@ public class ArgumentsHandler {
             //if there is a valid index corresponding to a short flag, set apportionment format from it.
             int index = checkShortFlags("f");
             setApportionmentFormatFromArgs(arguments.get(index));
+        } else {
+            System.out.println("No \"-f\" or \"--format\" flag found. Using Default Format of Alphabetical.");
         }
-        //if no formats are found, default value is given.
+        //if no formats are found, system notifies user that default value is given.
     }
     private void setStateReaderFromFilename(String filename) {
         StateReaderFactory factory = new StateReaderFactory();
@@ -92,8 +96,10 @@ public class ArgumentsHandler {
         } else if (checkShortFlags("r") != -1) {
             //if there is a valid index corresponding to a short flag, parse reps.
             parseReps(checkShortFlags("r"));
+        } else {
+            System.out.println("No \"-r\" or \"--reps\" flag found. Using Default number of 435 reps.");
         }
-        //if no reps are found, default value is given.
+        //if no reps are found, system notifies user that default value is given.
     }
 
     private int checkShortFlags(String flag) {

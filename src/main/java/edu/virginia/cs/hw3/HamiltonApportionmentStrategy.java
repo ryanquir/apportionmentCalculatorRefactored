@@ -10,9 +10,18 @@ public class HamiltonApportionmentStrategy extends ApportionmentStrategy{
     private DecimalApportionment decimalApportionment;
     private Apportionment apportionment;
 
+    public Apportionment getApportionment() {
+        Apportionment apportionment = new Apportionment();
+        return apportionment;
+    }
     @Override
     public Apportionment getApportionment(List<State> stateList, int representatives) {
         initializeFields(stateList, representatives);
+        apportionment = getApportionment();
+        int repsLeft = getRepsLeftToAllocate();
+        if (repsLeft < stateList.size()) {
+            throw new InsufficientRepAmount(repsLeft,stateList.size());
+        }
         divisor = getDivisor();
         decimalApportionment = getDecimalApportionment();
         return getIntegerApportionment();

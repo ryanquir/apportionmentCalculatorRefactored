@@ -36,6 +36,10 @@ public class HuntingtonHillApportionmentStrategy extends ApportionmentStrategy {
     }
 
     private void executeFirstPassApportionment(List<State> stateList) {
+        int repsLeft = getRepsLeftToAllocate();
+        if (repsLeft < stateList.size()) {
+            throw new InsufficientRepAmount(repsLeft,stateList.size());
+        }
         for (State state : stateList) {
             this.apportionment.addRepresentativesToState(state, 1);
             priorityList.put(state, getPriority(state));

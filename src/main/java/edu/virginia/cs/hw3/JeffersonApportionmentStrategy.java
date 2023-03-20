@@ -1,7 +1,6 @@
 package edu.virginia.cs.hw3;
 
 import java.util.List;
-import java.util.Map;
 
 public class JeffersonApportionmentStrategy extends ApportionmentStrategy {
     private List<State> stateList;
@@ -10,6 +9,7 @@ public class JeffersonApportionmentStrategy extends ApportionmentStrategy {
     private DecimalApportionment decimalApportionment;
     private Apportionment apportionment;
 
+
     @Override
     public Apportionment getApportionment(List<State> stateList, int representatives) {
         initializeFields(stateList, representatives);
@@ -17,6 +17,10 @@ public class JeffersonApportionmentStrategy extends ApportionmentStrategy {
         decimalApportionment = getDecimalApportionment();
         apportionment = getRoundedApportionment();
         int repsLeft = getRepsLeftToAllocate();
+        int allocatedReps = apportionment.getAllocatedRepresentatives();
+        if (repsLeft+allocatedReps < stateList.size()) {
+            throw new InsufficientRepAmount(repsLeft,stateList.size());
+        }
         while (repsLeft != 0) {
             if (repsLeft > 0) {
                 divisor /= ((double)(repsLeft + representatives)/representatives);
