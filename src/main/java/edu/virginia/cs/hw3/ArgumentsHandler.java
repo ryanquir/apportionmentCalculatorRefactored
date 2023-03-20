@@ -63,7 +63,11 @@ public class ArgumentsHandler {
         } else if (checkShortFlags("a") != -1) {
             //if there is a valid index corresponding to a short flag, set apportionment strategy from it.
             int index = checkShortFlags("a");
-            setApportionmentStrategyFromArgs(arguments.get(index));
+            try {
+                setApportionmentStrategyFromArgs(arguments.get(index));
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                throw new RuntimeException("No value for algorithm flag");
+            }
         } else {
             System.out.println("No \"-a\" or \"--algorithm\" flag found. Using Default Strategy of Hamilton.");
         }
@@ -76,7 +80,11 @@ public class ArgumentsHandler {
         } else if (checkShortFlags("f") != -1) {
             //if there is a valid index corresponding to a short flag, set apportionment format from it.
             int index = checkShortFlags("f");
-            setApportionmentFormatFromArgs(arguments.get(index));
+            try {
+                setApportionmentFormatFromArgs(arguments.get(index));
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                throw new RuntimeException("No value for format flag");
+            }
         } else {
             System.out.println("No \"-f\" or \"--format\" flag found. Using Default Format of Alphabetical.");
         }
@@ -100,7 +108,11 @@ public class ArgumentsHandler {
             parseReps(index+1);
         } else if (checkShortFlags("r") != -1) {
             //if there is a valid index corresponding to a short flag, parse reps.
-            parseReps(checkShortFlags("r"));
+            try {
+                parseReps(checkShortFlags("r"));
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                throw new RuntimeException("No value for reps flag");
+            }
         } else {
             System.out.println("No \"-r\" or \"--reps\" flag found. Using Default number of 435 reps.");
         }
@@ -111,35 +123,40 @@ public class ArgumentsHandler {
         for (int i=1;i<arguments.size();i++) {
             //if there is an argument that has only ONE "-", and it has the flag in it...
             if (arguments.get(i).contains(flag) && arguments.get(i).contains("-") && !arguments.get(i).contains("--")) {
-                int index = i;
                 //we can treat it as a combined short flag, taking the index of where the flag is in the string
                 //And adding it to original argument index to parse
                 int stringIndex = arguments.get(i).indexOf(flag);
-                return (index+stringIndex);
+                return (i +stringIndex);
             }
         }
         return -1;
     }
 
     private void checkFlags() {
+        int match=0;
         if (arguments.size() == 1) {
             return;
         }
         for (int i=1;i<arguments.size();i++) {
-            for (int j=0; j<validFlags.length;j++) {
-                try {
-                    if (arguments.get(i) == validFlags[j]) {
-                        break;
-                    } else {
-                        Integer.parseInt(arguments.get(i));
-                    }
-                } catch (NumberFormatException e) {
-                    //must catch this error to check if all arguments are in validFlag list or a valid number.
+            for (String validFlag : validFlags) {
+                if (Objects.equals(arguments.get(i), validFlag)) {
+//                    System.out.println("valid flag found.");
+                    match++;
+                    break;
                 }
+            }
+            try {
+                Integer.parseInt(arguments.get(i));
+                //System.out.println("number found.");
+                match++;
+            }catch (NumberFormatException e) {
+                //must catch this error to check if all arguments are in validFlag list or a valid number.
             }
         }
         //if there are no matches, there is an invalid flag.
-        throw new RuntimeException("An invalid flag is present. Please check for typos.");
+        if (match != arguments.size()-1) {
+            throw new RuntimeException("An invalid flag is present. Please check for typos.");
+        }
     }
 
 
