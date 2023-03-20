@@ -6,9 +6,13 @@ import java.io.*;
 public class ArgumentsHandler {
 
     public static final int FILENAME_INDEX = 0;
-//    public static final int REPRESENTATIVES_INDEX = 1;
+    //    public static final int REPRESENTATIVES_INDEX = 1;
     private final List<String> arguments;
     private Configuration config;
+
+    public String[] validFlags = new String[] {"-r", "--reps", "-a", "--algorithm", "--format", "-f", "-ra", "-ar", "-fa", "-af",
+            "-fr", "-rf", "-arf", "-afr", "-raf", "-rfa", "-fra", "-far", "hamilton", "jefferson", "huntington",
+            "alpha", "benefit"};
 
     public ArgumentsHandler(List<String> arguments) {
         if (arguments.size() < 1) {
@@ -24,19 +28,20 @@ public class ArgumentsHandler {
 
     public Configuration getConfiguration() {
         String filename = arguments.get(FILENAME_INDEX);
-            try {
-                if (filenameExists(filename)) {
-                    setDefaultConfiguration();
-                    configureStateReader(filename); //good
-                    configureApportionmentStrategy(); //good
-                    configureApportionmentFormat(); //good
-                    checkForRepresentativeCount(); //good
-                } else {
-                    throw new FileNotFoundException();
-                }
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException("File not found. Please check for typos.");
+        try {
+            if (filenameExists(filename)) {
+                setDefaultConfiguration();
+                checkFlags();
+                configureStateReader(filename); //good
+                configureApportionmentStrategy(); //good
+                configureApportionmentFormat(); //good
+                checkForRepresentativeCount(); //good
+            } else {
+                throw new FileNotFoundException();
             }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found. Please check for typos.");
+        }
 
         return config;
     }
@@ -110,12 +115,33 @@ public class ArgumentsHandler {
                 //we can treat it as a combined short flag, taking the index of where the flag is in the string
                 //And adding it to original argument index to parse
                 int stringIndex = arguments.get(i).indexOf(flag);
-                parseReps(index+stringIndex);
                 return (index+stringIndex);
             }
         }
         return -1;
     }
+
+    private void checkFlags() {
+        if (arguments.size() == 1) {
+            return;
+        }
+        for (int i=1;i<arguments.size();i++) {
+            for (int j=0; j<validFlags.length;j++) {
+                try {
+                    if (arguments.get(i) == validFlags[j]) {
+                        break;
+                    } else {
+                        Integer.parseInt(arguments.get(i));
+                    }
+                } catch (NumberFormatException e) {
+                    //must catch this error to check if all arguments are in validFlag list or a valid number.
+                }
+            }
+        }
+        //if there are no matches, there is an invalid flag.
+        throw new RuntimeException("An invalid flag is present. Please check for typos.");
+    }
+
 
     private void parseReps (int index) {
         try {
