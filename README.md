@@ -2,9 +2,9 @@
 
 ## Authors
 
-* Christopher Joseph - tbh7cm
-* Pranav Ramkumar - vej8jz
-* Ryan Quiram - zhe5qq
+* Christopher Joseph
+* Pranav Ramkumar
+* Ryan Quiram
 
 ## Description on how to use your code
 To use our code, you must run the program with the following inputs:
