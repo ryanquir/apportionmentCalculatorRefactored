@@ -1,5 +1,3 @@
-# HW3-Apportionment-Refactored
-
 ## Authors
 
 * Christopher Joseph
